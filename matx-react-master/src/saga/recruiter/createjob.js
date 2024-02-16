@@ -20,7 +20,6 @@ export default function* watchcreatejob ()
 
 
 
-
 function* getJob (action)
 {
  try{
