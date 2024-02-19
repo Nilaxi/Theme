@@ -23,6 +23,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import { useTheme } from '@emotion/react';
+import { deleteJobRequest } from 'slice/recruiter/UpdateJobSlice';
 
 
 
@@ -59,8 +60,20 @@ function ListJob() {
 
       dis(getJobrequest(1))
 
-    }, [])
+    }, []);
+    // Delete Job
+    const [idToDelete, setIdToDelete] = useState('');
+    const [openDelete, setOpenDelete] = useState(false);  
+  const handleClickOpenDelete = (id) => { setOpenDelete(true)
 
+    console.log(id);
+    setIdToDelete(id)};
+  const handleCloseDelete = () => setOpenDelete(false);
+
+  const handleDelete = () => {
+      dis(deleteJobRequest(idToDelete));  
+    handleCloseDelete();
+  };
   
 
 
@@ -130,7 +143,7 @@ function ListJob() {
                         <CardActions style={{display:"grid"}} >
                             <Button style={{backgroundColor:"rgba(34,42,69, 0.96)", color:"white", padding:"60px 30px", margin : "0px 2px", fontSize:'15px', borderRadius: '10px',fontFamily :'Roboto","Helvetica","Arial",sans-serif'}} size="small">View Application</Button>
                             <Button  style={{backgroundColor:"#13263a", color:"white", padding:"14px 80px", margin : '0px 3px',fontSize:'15px',borderRadius: '10px',fontFamily :'Roboto","Helvetica","Arial",sans-serif' }} onClick={handleClickOpenUpdate}  size="small">Update Details</Button>
-                            <Button style={{backgroundColor:"#f50057",  color:"white",  padding:"14px 80px", margin: '-2px 2px',fontSize:'15px',borderRadius: '10px',fontFamily :'Roboto","Helvetica","Arial",sans-serif', fontWeight:'20px'}} onClick={handleClickOpen} size="15px">Delete Job</Button>
+                            <Button style={{backgroundColor:"#f50057",  color:"white",  padding:"14px 80px", margin: '-2px 2px',fontSize:'15px',borderRadius: '10px',fontFamily :'Roboto","Helvetica","Arial",sans-serif', fontWeight:'20px'}} onClick={()=>{ handleClickOpenDelete(v._id) }} size="15px">Delete Job</Button>
                          </CardActions>
                         </div>
                       </CardActionArea>
@@ -157,7 +170,7 @@ function ListJob() {
 
           {/* ------- delete popup start--------------> */}
           <Dialog
-          open={open}
+          open={openDelete}
           keepMounted
           onClose={handleClose}
           aria-describedby="alert-dialog-slide-description"
@@ -176,7 +189,7 @@ function ListJob() {
                 border: 'none'
               }}
               size="small"
-              onClick={handleClose}
+              onClick={handleDelete}
             >
               DELETE
             </Button>

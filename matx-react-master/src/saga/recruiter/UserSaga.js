@@ -1,7 +1,7 @@
 // Example import in UserSaga.js
 import { put, call, takeEvery } from "redux-saga/effects";
-import { UserAPI } from "service/recruiter/recruiterjob";
-import { SucgetUserRequest, UserJobFail, UserJobSuc, UserRequest, failUserRequest, getUserRequest, getUserrequest } from "slice/recruiter/UserJobSlice";
+import { UserAPI, getUserAPI } from "service/recruiter/recruiterjob";
+import { SucgetUserRequest, UserJobFail, UserJobSuc, UserRequest, failUserRequest, getUserRequest} from "slice/recruiter/UserJobSlice";
 
 
 
@@ -26,7 +26,7 @@ export default function* watchgetUser()
 function* getUserData (action)
 {
  try{
-  let mydat =  yield call(getUser, action.payload);
+  let mydat =  yield call(getUserAPI, action.payload);
   yield put( SucgetUserRequest(mydat));
 }
 catch(error){

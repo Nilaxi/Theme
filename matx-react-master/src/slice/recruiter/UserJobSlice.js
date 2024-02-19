@@ -36,7 +36,7 @@ const UserJobSlice = createSlice({
  },
    SucgetUserRequest : function(state, {payload}){
      state.isloading = false;
-      state.listData = payload;
+      state.data = payload;
  
 },
    failgetUserRequest : function(state, {payload}){

@@ -12,8 +12,21 @@ import authFetch, { authFetchGet } from "service/authfetch";
     return authFetch('/api/User', 'Put',data1);
 
 };
-export const getUser = (data)  =>{
+export const getUserAPI = (data)  =>{
     return authFetchGet(`/api/User`,'GET',data);
 }
+
+export const UpdateAPI = (data1)  =>{
+    return authFetchGet(`/api/User`,'Put',data1);
+}
+
+
+export const deleteJobData = (id) => {
+
+    return authFetchGet(`/api/jobs/${id}`, 'DELETE');
+}
+
+
+
 
 export default createJobAPI;
