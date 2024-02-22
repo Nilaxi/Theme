@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Hidden,
@@ -22,6 +22,8 @@ import { topBarHeight } from 'app/utils/constant';
 import { Span } from '../../Typography';
 import NotificationBar from '../../NotificationBar/NotificationBar';
 import ShoppingCart from '../../ShoppingCart';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.text.primary
@@ -101,6 +103,15 @@ const Layout1Topbar = () => {
     }
     updateSidebarMode({ mode });
   };
+  const [name,setName] = useState('');
+  useEffect(()=>{
+    setName(localStorage.getItem('name'))
+})
+  const Navigate = useNavigate()
+  const Logout = () =>{
+    localStorage.removeItem('token')
+    Navigate('/session/signin')
+  }
 
   return (
     <TopbarRoot>
@@ -139,7 +150,7 @@ const Layout1Topbar = () => {
               <UserMenu>
                 <Hidden xsDown>
                   <Span>
-                    Hi <strong>{user.name}</strong>
+                    Hi <strong>{name}</strong>
                   </Span>
                 </Hidden>
                 <Avatar src={user.avatar} sx={{ cursor: 'pointer' }} />
@@ -165,7 +176,7 @@ const Layout1Topbar = () => {
               <Span> Settings </Span>
             </StyledItem>
 
-            <StyledItem onClick={logout}>
+            <StyledItem onClick={Logout}>
               <Icon> power_settings_new </Icon>
               <Span> Logout </Span>
             </StyledItem>

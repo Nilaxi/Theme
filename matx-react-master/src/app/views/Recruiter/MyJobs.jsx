@@ -32,7 +32,7 @@ import { useSelector } from 'react-redux';
 // import { SetPopupContext } from "../../App";
 
 // import apiList from "../../lib/apiList";
-// import { Modal } from "react-bootstrap";
+
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',

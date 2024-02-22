@@ -3,7 +3,7 @@ import { Breadcrumb } from 'app/components'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { UserRequest, getUserRequest, getUserrequest } from 'slice/recruiter/UserJobSlice'
 
@@ -38,6 +38,8 @@ const Profile = () => {
   const handleSubmit =(e)=>{
     e.preventDefault()
     dis (UserRequest(userdata))
+    localStorage.setItem('name',userdata.name)
+  
     toast.success("Update profile Succcessfully")
     navi('/Recruiter/profile')
 }

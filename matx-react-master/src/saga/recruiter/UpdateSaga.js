@@ -40,10 +40,10 @@ export  function* watchgetupdateJob()
 function* deleteJob(action) {
   try {
  
-  let mydata3 =  yield call(deleteJobData, action.payload);  
+  let mydata4 =  yield call(deleteJobData, action.payload);  
 
 
-    yield put(deleteJobSuccess(mydata3));
+    yield put(deleteJobSuccess(mydata4));
 
  toast.success("Job Delete")
 

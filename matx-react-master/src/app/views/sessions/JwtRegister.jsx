@@ -70,12 +70,17 @@ const JwtRegister = () => {
      
       }).then(y=>y.json())
       .then((y)=>{
-        setLoading(false);
        
+        setLoading(false);
+        console.log(y)
         if(!y.errors && !y.driver)
-        {  navigate('/session/signin');
- 
+        { 
+         // navigate('/session/signin');
+         // toast.success("Register successfull")
+         localStorage.setItem('tokenForapplicant' , JSON.stringify(y))
         }
+
+
        }).catch((error)=>{
  
        console.log(error);
