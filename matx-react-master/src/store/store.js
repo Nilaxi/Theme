@@ -13,7 +13,7 @@ const store = configureStore({
   reducer: {
     jobs : createjobSlice,
     User : UserJobSlice,
-    Update : UpdateJobSlice
+    update : UpdateJobSlice
   },
   middleware: [sagaMiddleware],
 });

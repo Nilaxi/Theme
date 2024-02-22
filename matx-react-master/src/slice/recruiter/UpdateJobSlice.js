@@ -3,44 +3,42 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     isloading : false,
     data : null,
-    error: null
+    error: null,
+    listData : []
 }
 
 const UpdateJobSlice = createSlice({
   name: 'Update',
   initialState,
   reducers: {
-    UpdateRequest : function(state){
-        state.isloading = true;
-    },
-   UpdateJobSuc : function(state,{payload})
-   {
-    state.isloading = false;
-    state.data = payload;
-  },
-    UpdateJobFail : function(state,{payload})
-    {
-     state.isloading = false;
-     state.error = payload;
-     
-    },
-
-
-    getupdateRequest : function(state){
+    GetUpdateRequest: function (state) {
       state.isloading = true;
-    
-   
- },
-   SucgetUpdateRequest : function(state, {payload}){
-     state.isloading = false;
-      state.listData = payload;
- 
-},
-   failgetupdateRequest : function(state, {payload}){
+    },
+    SucGetUpdateRequest: function (state, { payload }) {
       state.isloading = false;
-       state.error = payload;
- },
+      state.data = payload;
+    },
+    FailGetUpdateRequest: function (state, { payload }) {
+      state.isloading = false;
+      state.error = payload;
+    },
 
+    
+    PutUpdateRequest: function (state) {
+      state.isloading = true;
+    },
+    SucPutUpdateRequest: function (state, { payload }) {
+      state.isloading = false;
+      state.listData = payload;
+    },
+    FailPutUpdateRequest: function (state, { payload }) {
+      state.isloading = false;
+      state.error = payload;
+    },
+
+
+
+    
  deleteJobRequest: (state) => {
   state.isloading = true;
 },
@@ -55,6 +53,8 @@ deleteJobFailure: (state, action) => {
 }
 });
 
-  export const {UpdateRequest,UpdateJobSuc,UpdateJobFail,getupdateRequest,SucgetUpdateRequest,failgetupdateRequest,deleteJobFailure,deleteJobRequest,deleteJobSuccess} = UpdateJobSlice.actions
+  export const {deleteJobFailure,deleteJobRequest,deleteJobSuccess,FailGetUpdateRequest,GetUpdateRequest,SucGetUpdateRequest,FailPutUpdateRequest,PutUpdateRequest
+  ,SucPutUpdateRequest
+} = UpdateJobSlice.actions
 
 export default UpdateJobSlice.reducer

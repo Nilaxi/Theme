@@ -1,7 +1,7 @@
 
 import {  call, put, takeEvery} from "redux-saga/effects"
-import createJobAPI, {  getJobData } from "service/recruiter/recruiterjob";
-import { createJobSuc, createJobFail, createJobrequest, SucgetJobRequest, failgetJobRequest, getJobrequest, } from "slice/recruiter/createjobSlice";
+import createJobAPI, {  getJobData, getJobDataSearch } from "service/recruiter/recruiterjob";
+import { createJobSuc, createJobFail, createJobrequest, SucgetJobRequest, failgetJobRequest, getJobrequest, searchsucGetJobRequest, searchFailGetJobRequest, searchgetJobRequest, } from "slice/recruiter/createjobSlice";
 
 function* createjob (action)
 {
@@ -33,4 +33,18 @@ catch(error){
 export  function* watchgetJob()
 {
   return yield takeEvery(getJobrequest, getJob);
+}
+
+function* searchgetjob(action) {
+  try {
+    let mydata = yield call(getJobDataSearch, action.payload);
+    yield put(searchsucGetJobRequest(mydata));
+   
+  } catch (error) {
+    yield put(searchFailGetJobRequest(error));
+  }
+}
+
+export function* watchsearchgetjob() {
+  return yield takeEvery(searchgetJobRequest, searchgetjob);
 }

@@ -1,14 +1,14 @@
 import React from 'react'
 import { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { getJobrequest } from 'slice/recruiter/createjobSlice';
+import { getJobrequest, searchgetJobRequest } from 'slice/recruiter/createjobSlice';
 import CardContent from '@mui/material/CardContent';
 import { useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useTheme } from '@emotion/react';
-import { UpdateRequest, deleteJobRequest, getupdateRequest } from 'slice/recruiter/UpdateJobSlice';
+import { GetUpdateRequest, PutUpdateRequest, UpdateRequest, deleteJobRequest, getupdateRequest } from 'slice/recruiter/UpdateJobSlice';
 import {
   Button,
   Grid,
@@ -29,7 +29,7 @@ import {
   InputAdornment
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search'
-import { useHistory } from 'react-router-dom';
+import { useHistory, useNavigate } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
 import makeStyles from '@emotion/styled';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -399,7 +399,7 @@ const FilterPopup = (props) => {
 
 function ListJob() {
   const [open, setOpen] = useState(false);
-  const handleClickOpen = () => setOpen(true);
+  // const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
 
@@ -414,6 +414,15 @@ function ListJob() {
 
  
 }, []);
+const handleSearch = (e)=>{
+
+  dis(searchgetJobRequest({
+
+    pageNumber: 1,
+    searchTerm :e.target.value
+  }));
+
+}
   // Delete Job
   const [idToDelete, setIdToDelete] = useState('');
   const [openDelete, setOpenDelete] = useState(false);
@@ -432,19 +441,55 @@ function ListJob() {
 
   // For Update
 
-  const [idToUpdate, setIdToUpdate] = useState('');
-  const [openUpdate, setOpenUpdate] = useState(false);
-  const handleClickOpenUpdate = (id) => {
-    setOpenUpdate(true)
-     
-        setIdToUpdate(id)
-  };
- 
-  const handleCloseUpdate = () => setOpenUpdate(false);
-  const handleUpdate = () => {
-    dis(getupdateRequest(idToUpdate));
-    handleCloseUpdate();
-  };
+//   const [idToUpdate,setIdToUpdate] = useState('');
+// const [openUpdate, setOpenUpdate] = useState(false);
+// const handleClickOpenUpdate = (id) =>  {
+  
+//   setOpenUpdate(true);
+//   setIdToUpdate(id)
+
+
+// };
+// const handleCloseUpdate = () => setOpenUpdate(false);
+
+
+// const updateJob = useSelector((state)=>state.update.data);
+// console.log(updateJob);
+
+// const navi = useNavigate();
+
+// const[update, setUpdate]=useState({
+//   jobType :updateJob.jobtype,
+//   maxApplicants : updateJob.maxApplicants,
+//   maxPositions :updateJob.maxPositions
+// });
+
+// useEffect(() => {
+//   dis (GetUpdateRequest())
+// },[])
+
+// useEffect(() => {
+//   dis (GetUpdateRequest(idToUpdate))
+// },[idToUpdate])
+
+// useEffect(() => {
+//   setUpdate(updateJob)
+// },[updateJob])
+
+// // const handleInput = (key, value) => {
+// //   setUpdate({
+// //     ...update,
+// //     [key]: value,
+// //   });
+  
+// // };
+// const handleUpdate =(e)=>{
+//   e.preventDefault()
+//   dis (PutUpdateRequest(update));
+//   handleCloseUpdate()
+  
+  
+// }
   
   const [jobs, setJobs] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -491,6 +536,7 @@ function ListJob() {
             <Grid item xs>
             <TextField
               label="Search Jobs"
+              onBlur={handleSearch}
               InputProps={{
                 endAdornment: (
                   <InputAdornment>
@@ -571,7 +617,7 @@ function ListJob() {
                         </CardContent>
                         <CardActions style={{ display: "grid" }} >
                           <Button style={{ backgroundColor: "#000033", color: "white", padding: "60px 30px", margin: "0px 2px", fontSize: '15px', borderRadius: '10px', fontFamily: 'Roboto","Helvetica","Arial",sans-serif' }} size="small">View Application</Button>
-                          <Button style={{ backgroundColor: "#00004d", color: "white", padding: "14px 80px", margin: '0px 3px', fontSize: '15px', borderRadius: '10px', fontFamily: 'Roboto","Helvetica","Arial",sans-serif' }} onClick={() => { handleClickOpenUpdate(v._id) }}  size="small">Update Details</Button>
+                          {/* <Button style={{ backgroundColor: "#00004d", color: "white", padding: "14px 80px", margin: '0px 3px', fontSize: '15px', borderRadius: '10px', fontFamily: 'Roboto","Helvetica","Arial",sans-serif' }} onClick={() => { handleClickOpenUpdate(v._id) }}  size="small">Update Details</Button> */}
                           <Button style={{ backgroundColor: "#f50057", color: "white", padding: "14px 80px", margin: '-2px 2px', fontSize: '15px', borderRadius: '10px', fontFamily: 'Roboto","Helvetica","Arial",sans-serif', fontWeight: '20px' }} onClick={() => { handleClickOpenDelete(v._id) }} size="15px">Delete Job</Button>
                         </CardActions>
                       </div>
@@ -601,7 +647,7 @@ function ListJob() {
         <Dialog
           open={openDelete}
           keepMounted
-          onClose={handleClose}
+          onClose={handleCloseDelete}
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle variant="h4" align="center">
@@ -643,9 +689,9 @@ function ListJob() {
         {/* ------- update popup start--------------> */}
         <Dialog
           fullScreen={fullScreen}
-          open={openUpdate}
+          // open={openUpdate}
           keepMounted
-          onClose={handleClose}
+          // onClose={handleCloseUpdate}
           aria-describedby="alert-dialog-slide-description"
 
         >
@@ -688,7 +734,7 @@ function ListJob() {
                 border: 'none'
               }}
               size="small"
-              onClick={handleUpdate}
+              // onClick={handleUpdate}
             >
               UPDATE
             </Button>
@@ -702,7 +748,7 @@ function ListJob() {
                 border: 'none'
               }}
               size="small"
-              onClick={handleCloseUpdate}
+              // onClick={handleCloseUpdate}
             >
               CANCEL
             </Button>
