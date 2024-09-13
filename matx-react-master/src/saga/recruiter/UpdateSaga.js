@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import {  call, put, takeEvery} from "redux-saga/effects"
-import { UpdateAPI, deleteJobData, getJobUpdateData, putJobUpdateData } from "service/recruiter/recruiterjob";
+import {  deleteJobData, getJobUpdateData, putJobUpdateData } from "service/recruiter/recruiterjob";
 
 import { FailGetUpdateRequest, FailPutUpdateRequest, GetUpdateRequest, PutUpdateRequest, SucGetUpdateRequest, SucPutUpdateRequest, SucgetUpdateRequest, UpdateJobFail, UpdateJobSuc, UpdateRequest, deleteJobFailure, deleteJobRequest, deleteJobSuccess, failgetupdateRequest, getupdateRequest } from "slice/recruiter/UpdateJobSlice";
 import { getJobrequest } from "slice/recruiter/createjobSlice";
@@ -21,8 +21,8 @@ export function* watchgetUpdate() {
 
 function* putUpdate(action) {
   try {
-    let mydata1 = yield call(putJobUpdateData, action.payload);
-    yield put(SucPutUpdateRequest(mydata1));
+    let mydata = yield call(putJobUpdateData, action.payload);
+    yield put(SucPutUpdateRequest(mydata));
     toast.success("Job Updated Successfully.");
 
     yield put(getJobrequest());

@@ -8,7 +8,7 @@ const initialState = {
 }
 
 const UpdateJobSlice = createSlice({
-  name: 'Update',
+  name: 'update',
   initialState,
   reducers: {
     GetUpdateRequest: function (state) {

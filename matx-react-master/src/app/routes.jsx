@@ -11,6 +11,9 @@ import Profile from './views/Recruiter/profile';
 import ListJob from './views/Recruiter/ListJob';
 import JwtLoginForApplicant from './views/sessions/JwtLoginForApplicant';
 import JwtRegistrationForApplicant from './views/sessions/JwtRegistrationForApplicant';
+import ApplicantRoutes from './views/Applicant/ApplicantRoutes';
+import ViewApplicaton from './views/Recruiter/ViewApplication';
+
 
 // session pages
 const NotFound = Loadable(lazy(() => import('app/views/sessions/NotFound')));
@@ -35,6 +38,7 @@ const routes = [
     children: [
       ...materialRoutes,
       ...RecruiterRoutes,
+      ...ApplicantRoutes,
       // dashboard route
       {
         path: '/dashboard/default',
@@ -66,8 +70,12 @@ const routes = [
   { path: '/Recruiter/CreateJob', element: <CreateJob /> },
   { path: '/Recruiter/profile', element: <Profile /> },
   { path: '/Recruiter/ListJob', element: <ListJob /> },
+  { path: '/Recruiter/ViewApplication', element: <ViewApplicaton /> },
+ 
+ 
   { path: '/', element: <Navigate to="dashboard/default" /> },
-  { path: '*', element: <NotFound /> }
+  { path: '*', element: <NotFound /> },
+
 ];
 
 export default routes;

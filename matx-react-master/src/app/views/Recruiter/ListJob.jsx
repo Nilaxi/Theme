@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { getJobrequest, searchgetJobRequest } from 'slice/recruiter/createjobSlice';
+import { getJobrequest, searchgetJobRequest, searchgetJobRequestAdvanced, viewgetJobrequest } from 'slice/recruiter/createjobSlice';
 import CardContent from '@mui/material/CardContent';
 import { useState } from 'react';
 import Dialog from '@mui/material/Dialog';
@@ -29,7 +29,7 @@ import {
   InputAdornment
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search'
-import { useHistory, useNavigate } from 'react-router-dom';
+import { Link, useHistory, useNavigate } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
 import makeStyles from '@emotion/styled';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -38,6 +38,8 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Breadcrumb, Card } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { createSearchParams, useSearchParams } from 'react-router-dom'
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -82,7 +84,7 @@ const FilterPopup = (props) => {
   const classes = useStyles();
   const { open, handleClose, searchOptions, setSearchOptions, getData } = props;
   return (
-    <Modal open={open} onClose={handleClose} className={classes.popupDialog}>
+    <Modal style={{display:'flex', justifyContent:'center',marginTop:'200px'}} open={open} onClose={handleClose} className={classes.popupDialog}>
       <Paper
         style={{
           padding: '50px',
@@ -386,7 +388,7 @@ const FilterPopup = (props) => {
               variant="contained"
               color="primary"
               style={{ padding: '10px 50px' }}
-              onClick={() => getData()}
+              onClick={() =>{handleClose(); getData()}}
             >
               Apply
             </Button>
@@ -399,40 +401,51 @@ const FilterPopup = (props) => {
 
 function ListJob() {
   const [open, setOpen] = useState(false);
-  // const handleClickOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+   
 
-
-  const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  //  const theme = useTheme()
+  //  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const { data, isloading, error, listData } = useSelector((y) => y.jobs);
   console.log(listData);
   const dis = useDispatch();
   useEffect(() => {
-      dis(getJobrequest(1))
+    dis(getJobrequest(1))
 
- 
-}, []);
-const handleSearch = (e)=>{
 
-  dis(searchgetJobRequest({
+  }, []);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-    pageNumber: 1,
-    searchTerm :e.target.value
-  }));
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-}
+  const handleSearch = (e) => {
+
+    dis(searchgetJobRequest({
+
+      pageNumber: 1,
+      searchTerm: e.target.value
+    }));
+
+  }
+
+  // For Delete
+
+  const [opendelete, setOpenDelete] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   // Delete Job
   const [idToDelete, setIdToDelete] = useState('');
-  const [openDelete, setOpenDelete] = useState(false);
+
   const handleClickOpenDelete = (id) => {
     setOpenDelete(true)
-       
-        setIdToDelete(id)
-     
+
+    setIdToDelete(id)
+
   };
- 
   const handleCloseDelete = () => setOpenDelete(false);
   const handleDelete = () => {
     dis(deleteJobRequest(idToDelete));
@@ -440,57 +453,55 @@ const handleSearch = (e)=>{
   };
 
   // For Update
+  const [idToUpdate, setIdToUpdate] = useState('');
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const handleClickOpenUpdate = (id) => {
 
-//   const [idToUpdate,setIdToUpdate] = useState('');
-// const [openUpdate, setOpenUpdate] = useState(false);
-// const handleClickOpenUpdate = (id) =>  {
-  
-//   setOpenUpdate(true);
-//   setIdToUpdate(id)
-
-
-// };
-// const handleCloseUpdate = () => setOpenUpdate(false);
+    setOpenUpdate(true);
+    setIdToUpdate(id)
 
 
-// const updateJob = useSelector((state)=>state.update.data);
-// console.log(updateJob);
+  };
+  const handleCloseUpdate = () => setOpenUpdate(false);
 
-// const navi = useNavigate();
 
-// const[update, setUpdate]=useState({
-//   jobType :updateJob.jobtype,
-//   maxApplicants : updateJob.maxApplicants,
-//   maxPositions :updateJob.maxPositions
-// });
+  const updateJob = useSelector((state) => state.update.data);
+  console.log(updateJob);
 
-// useEffect(() => {
-//   dis (GetUpdateRequest())
-// },[])
+  const [update, setUpdate] = useState({
+    jobType: updateJob?.jobType,
+    maxApplicants: updateJob?.maxApplicants,
+    maxPositions: updateJob?.maxPositions
+  });
 
-// useEffect(() => {
-//   dis (GetUpdateRequest(idToUpdate))
-// },[idToUpdate])
+  useEffect(() => {
+    dis(GetUpdateRequest(idToUpdate))
+  }, [idToUpdate])
 
-// useEffect(() => {
-//   setUpdate(updateJob)
-// },[updateJob])
+  useEffect(() => {
+    setUpdate(updateJob)
+  }, [updateJob])
 
-// // const handleInput = (key, value) => {
-// //   setUpdate({
-// //     ...update,
-// //     [key]: value,
-// //   });
-  
-// // };
-// const handleUpdate =(e)=>{
-//   e.preventDefault()
-//   dis (PutUpdateRequest(update));
-//   handleCloseUpdate()
-  
-  
-// }
-  
+  const handleInput = (key, value) => {
+    setUpdate({
+      ...update,
+      [key]: value,
+    });
+
+  };
+  const handleUpdate = (e) => {
+    e.preventDefault()
+    dis(PutUpdateRequest({...update,_id:idToUpdate}));
+    toast.success("Updated Successfully!")
+    handleCloseUpdate()
+
+
+  }
+
+  const clearAll = () => {
+    dis(getJobrequest(1));
+  }
+  //Serach Job
   const [jobs, setJobs] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [searchOptions, setSearchOptions] = useState({
@@ -500,7 +511,7 @@ const handleSearch = (e)=>{
       partTime: false,
       wfh: false,
     },
-    salary: [0, 100],
+    salary: [0, 0],
     duration: "0",
     sort: {
       salary: {
@@ -515,8 +526,34 @@ const handleSearch = (e)=>{
         status: false,
         desc: false,
       },
-  },
+    },
   });
+  const advancedhandleSearch = (e)=>{
+
+    console.log(searchOptions);
+
+    dis(searchgetJobRequestAdvanced({
+      ...searchOptions,
+      pageNumber: 1  
+
+
+    }));
+
+    }
+   // view Application start ======------->
+const nav = useNavigate("")
+const[idToview, setIdview]=useState("")
+console.log(idToview)
+useEffect(()=>{
+  
+   dis(viewgetJobrequest(idToview))
+},[idToview])
+ const Applicationhandlesubmit =(id)=>{
+  setIdview(id)
+  nav({pathname :"/Recruiter/ViewApplicaton", search : createSearchParams({id: id}).toString()})
+ }
+
+//view Application end ======------->
 
 
   return (
@@ -528,45 +565,45 @@ const handleSearch = (e)=>{
             <Breadcrumb routeSegments={[{ name: 'ListJob', path: '/Recruiter' }, { name: 'ListJob' }]} />
           </Box>
 
-         
+
           <Grid item container direction="column" justify="center" alignItems="center" >
             <Grid item xs>
               <Typography variant="h4">My Jobs</Typography>
             </Grid>
             <Grid item xs>
-            <TextField
-              label="Search Jobs"
-              onBlur={handleSearch}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment>
-                    <IconButton>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-              style={{ width: '500px' }}
-              variant="outlined"
+              <TextField
+                label="Search Jobs"
+                onBlur={handleSearch}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment>
+                      <IconButton>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+                style={{ width: '500px' }}
+                variant="outlined"
+              />
+              <Button variant="outlined" style={{margin : "0px 10px", padding : "14px"}} onClick={clearAll}>Clear</Button>
+            </Grid>
+            <Grid item>
+              <IconButton>
+                <FilterListIcon onClick={() => setFilterOpen(true)} />
+              </IconButton>
+            </Grid>
+
+            <FilterPopup
+              open={filterOpen}
+              searchOptions={searchOptions}
+              setSearchOptions={setSearchOptions}
+              handleClose={() => setFilterOpen(false)}
+              getData={advancedhandleSearch}
+               
+           
             />
-          </Grid>
-          <Grid item>
-            <IconButton>
-              <FilterListIcon onClick={() => setFilterOpen(true)} />
-            </IconButton>
-          </Grid>
-
-          <FilterPopup
-            open={filterOpen}
-            searchOptions={searchOptions}
-            setSearchOptions={setSearchOptions}
-            handleClose={() => setFilterOpen(false)}
-            getData={() => {
-
-              setFilterOpen(false);
-            }}
-          />
-{/* 
+            {/* 
             <Grid item>
               <IconButton>
                 <FilterListIcon />
@@ -613,39 +650,32 @@ const handleSearch = (e)=>{
                           <Typography variant="body2" color="text.secondary">Application Deadline :
                             {v.deadline}
                           </Typography>
-
+                          <Typography variant="body2" color="text.secondary">maximum Applicants:
+                            {v.maxApplicants}
+                          </Typography>
+                       <Typography variant="body2" color="text.secondary">Position:
+                            {v.maxPositions}
+                          </Typography>
                         </CardContent>
                         <CardActions style={{ display: "grid" }} >
-                          <Button style={{ backgroundColor: "#000033", color: "white", padding: "60px 30px", margin: "0px 2px", fontSize: '15px', borderRadius: '10px', fontFamily: 'Roboto","Helvetica","Arial",sans-serif' }} size="small">View Application</Button>
-                          {/* <Button style={{ backgroundColor: "#00004d", color: "white", padding: "14px 80px", margin: '0px 3px', fontSize: '15px', borderRadius: '10px', fontFamily: 'Roboto","Helvetica","Arial",sans-serif' }} onClick={() => { handleClickOpenUpdate(v._id) }}  size="small">Update Details</Button> */}
+                        <Button onClick={()=>{Applicationhandlesubmit(v._id)}} style={{ backgroundColor: "#000033", color: "white", padding: "60px 30px", margin: "0px 2px", fontSize: '15px', borderRadius: '10px', fontFamily: 'Roboto","Helvetica","Arial",sans-serif' }} size="small">View Application</Button>
+                          <Button style={{ backgroundColor: "#00004d", color: "white", padding: "14px 80px", margin: '0px 3px', fontSize: '15px', borderRadius: '10px', fontFamily: 'Roboto","Helvetica","Arial",sans-serif' }} onClick={() => { handleClickOpenUpdate(v._id) }} size="small">Update Details</Button>
                           <Button style={{ backgroundColor: "#f50057", color: "white", padding: "14px 80px", margin: '-2px 2px', fontSize: '15px', borderRadius: '10px', fontFamily: 'Roboto","Helvetica","Arial",sans-serif', fontWeight: '20px' }} onClick={() => { handleClickOpenDelete(v._id) }} size="15px">Delete Job</Button>
                         </CardActions>
                       </div>
                     </CardActionArea>
-
-
-
-
-
                   </Card>
-
-
                 )
-
               })
               }
-
-
             </ul>
-
           )}
-
         </div>
 
 
         {/* ------- delete popup start--------------> */}
         <Dialog
-          open={openDelete}
+          open={opendelete}
           keepMounted
           onClose={handleCloseDelete}
           aria-describedby="alert-dialog-slide-description"
@@ -689,9 +719,9 @@ const handleSearch = (e)=>{
         {/* ------- update popup start--------------> */}
         <Dialog
           fullScreen={fullScreen}
-          // open={openUpdate}
+          open={openUpdate}
           keepMounted
-          // onClose={handleCloseUpdate}
+          onClose={handleCloseUpdate}
           aria-describedby="alert-dialog-slide-description"
 
         >
@@ -699,9 +729,13 @@ const handleSearch = (e)=>{
             Update Details
           </DialogTitle>
           <TextField
-            label="Application Deadline"
-            type="datetime-local"
+            label="Job Type"
+            type="text"
+            value ={update?.jobType}
+              onChange={(event) =>{
+                handleInput("jobType",event.target.value)
 
+              }}
             InputLabelProps={{
               shrink: true
             }}
@@ -711,7 +745,13 @@ const handleSearch = (e)=>{
           <TextField
             label="Maximum Number Of Applicants"
             type="number"
+            value ={update?.maxApplicants}
+            onChange={(event) =>{
+              handleInput("maxApplicants",event.target.value)
+
+            }}
             variant="outlined"
+
             InputProps={{ inputProps: { min: 1 } }}
             style={{ marginBottom: '10px', padding: '0px 9px' }}
           />
@@ -719,7 +759,13 @@ const handleSearch = (e)=>{
             label="Positions Available"
             type="number"
             variant="outlined"
+            value ={update?.maxPositions}
+            onChange={(event) =>{
+              handleInput("maxPositions",event.target.value)
+
+            }}
             InputProps={{ inputProps: { min: 1 } }}
+           
             style={{ marginBottom: '10px', padding: '0px 9px' }}
           />
 
@@ -734,7 +780,7 @@ const handleSearch = (e)=>{
                 border: 'none'
               }}
               size="small"
-              // onClick={handleUpdate}
+              onClick={handleUpdate}
             >
               UPDATE
             </Button>
@@ -748,7 +794,7 @@ const handleSearch = (e)=>{
                 border: 'none'
               }}
               size="small"
-              // onClick={handleCloseUpdate}
+              onClick={handleCloseUpdate}
             >
               CANCEL
             </Button>
@@ -758,5 +804,6 @@ const handleSearch = (e)=>{
     </>
   )
 }
+
 export default ListJob
 

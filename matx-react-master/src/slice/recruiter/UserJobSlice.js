@@ -6,7 +6,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     isloading : false,
     data : null,
-    error: null
+    error: null   
 }
 
 const UserJobSlice = createSlice({

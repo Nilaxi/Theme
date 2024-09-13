@@ -1,7 +1,7 @@
 // Example import in UserSaga.js
 import { put, call, takeEvery } from "redux-saga/effects";
 import { UserAPI, getUserAPI } from "service/recruiter/recruiterjob";
-import { SucgetUserRequest, UserJobFail, UserJobSuc, UserRequest, failUserRequest, getUserRequest} from "slice/recruiter/UserJobSlice";
+import {  SucgetUserRequest, UserJobFail, UserJobSuc, UserRequest, failUserRequest, getUserRequest} from "slice/recruiter/UserJobSlice";
 
 
 
